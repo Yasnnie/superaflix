@@ -2,13 +2,15 @@ import Image from "next/image";
 import Logo from "/public/logo.svg";
 import styles from "./HomeSearch.module.scss";
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/router";
 
 export function HomeSearch() {
+  const router = useRouter();
   const [text, setText] = useState("");
+
   function handleOnSubmit(e: FormEvent) {
     e.preventDefault();
-
-    console.log(text);
+    router.push(`/film/${text}`);
   }
 
   return (
