@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { searchAll } from "@/service/ApiService";
 import Link from "next/link";
+import { YearRangePicker } from "../YearRangePicker";
 
 export function HomeSearch() {
   const router = useRouter();
@@ -29,8 +30,33 @@ export function HomeSearch() {
       </h1>
 
       <form className={styles.main__form} onSubmit={handleOnSubmit}>
-        <input value={text} onChange={(e) => setText(e.target.value)} />
-        <button type="submit">Pesquisar</button>
+        <YearRangePicker />
+        <label>
+          <span>Categoria:</span>
+
+          <select>
+            <option></option>
+            <option>Terror</option>
+            <option>Ação</option>
+            <option>Comédia</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Avaliação mínima:</span>
+
+          <input type="number" min={0} max={10} step={1} />
+        </label>
+
+        <label>
+          <span>Qtd avaliações:</span>
+
+          <input type="number" />
+        </label>
+
+        <button type="submit" className={styles.main__form__submit}>
+          Filtrar
+        </button>
       </form>
 
       <div className={styles.main__table}>

@@ -13,33 +13,43 @@
 
 
     &__form {
-        width: 50%;
+        width: 65%;
         height: 40px;
-        border-radius: 30px;
-        border: 1px solid #f4f4f4;
-        overflow: hidden;
         display: flex;
-        align-items: center;
-        margin-top: 2rem;
+        align-items: flex-end;
+        margin-top: 4rem;
         margin-bottom: 2rem;
+        gap: 1.5rem;
 
-        input {
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
             flex: 1;
-            border: none;
-            background: none;
-            height: 100%;
-            font-size: 1.125rem;
-            color: #fff;
-            outline: none;
-            padding: 0 1rem;
+
+
+            select,
+            input {
+                min-height: 40px;
+                background: none;
+                border: 1px solid #dcdcdc;
+                border-radius: 0.25rem;
+                color: #fff;
+                outline: none;
+                padding: 0.5rem;
+                flex: 1;
+                min-width: 100px;
+            }
+
+
         }
 
-        button {
-            background: #f4f4f4;
+        &__submit {
+            background: #EB0000;
             outline: none;
             border: none;
-
-            color: #151515;
+            border-radius: 0.25rem;
+            color: #f1f1f1;
             font-size: 1rem;
             padding: 0 1rem;
             height: 100%;

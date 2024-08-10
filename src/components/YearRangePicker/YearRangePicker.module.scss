@@ -1,0 +1,12 @@
+.row {
+    flex: 1;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    span {
+        width: 0.5rem;
+        height: 1px;
+        background: #fff;
+    }
+}
