@@ -31,7 +31,7 @@ export function YearRangePicker({ onChangeStart, onChangeEnd }: Props) {
     <label>
       <div className={styles.row}>
         <select value={startYear} onChange={handleStartYearChange}>
-          <option value={0}>De:</option>
+          <option value={""}>De:</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -42,7 +42,7 @@ export function YearRangePicker({ onChangeStart, onChangeEnd }: Props) {
         <span />
 
         <select value={endYear} onChange={handleEndYearChange}>
-          <option value={0}>Até:</option>
+          <option value={""}>Até:</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
