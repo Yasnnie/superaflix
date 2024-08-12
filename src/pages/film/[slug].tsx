@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { FilmDetail } from "@/components/FilmDetail";
 import { GetServerSideProps } from "next";
-import { searchFilm } from "@/service/ApiService";
+import { searchFilm } from "@/service/FilmService";
 import { useEffect } from "react";
 
 interface Props {

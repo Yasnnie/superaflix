@@ -1,26 +1,66 @@
 import Image from "next/image";
 import Logo from "/public/logo.svg";
 import styles from "./HomeSearch.module.scss";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { searchAll } from "@/service/ApiService";
+
 import Link from "next/link";
 import { YearRangePicker } from "../YearRangePicker";
+import { getFilms, getGenres } from "@/service/UploadService";
+import { Star } from "@mui/icons-material";
 
 export function HomeSearch() {
-  const router = useRouter();
-  const [text, setText] = useState("");
-  const [posters, setPosters] = useState<Poster[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  async function handleOnSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (text) {
-      try {
-        const { data } = await searchAll(text);
-        console.log(data);
-        setPosters(data.Search);
-      } catch (err) {}
+  const [filters, setFilter] = useState<Filters>({
+    title: "",
+    min_votes: "",
+    min_rating: "",
+    genres: "",
+    year_end: "",
+    year_start: "",
+  });
+
+  const [page, setPage] = useState(1);
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  const [genres, setGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    getGenres().then(({ data }) => setGenres(data));
+    getData(1);
+  }, []);
+
+  async function getData(newPage: number) {
+    setLoading(true);
+    try {
+      const { data } = await getFilms(page, filters);
+      setMovies(data.results);
+      setPage(newPage);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
     }
+  }
+
+  async function getPrevData() {
+    if (page > 1) {
+      await getData(page - 1);
+    }
+  }
+  async function getNextData() {
+    await getData(page + 1);
+  }
+
+  function editFilter(key: keyof Filters, value: string) {
+    setFilter((filters) => {
+      return { ...filters, [key]: value };
+    });
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    getData(1);
   }
 
   return (
@@ -29,29 +69,46 @@ export function HomeSearch() {
         <Image src={Logo} alt="SuperaFlix" fill />
       </h1>
 
-      <form className={styles.main__form} onSubmit={handleOnSubmit}>
-        <YearRangePicker />
+      <form className={styles.main__form} onSubmit={handleSubmit}>
         <label>
-          <span>Categoria:</span>
+          <input
+            placeholder="Nome:"
+            value={filters.title}
+            onChange={(e) => editFilter("title", e.target.value)}
+          />
+        </label>
 
-          <select>
-            <option></option>
-            <option>Terror</option>
-            <option>Ação</option>
-            <option>Comédia</option>
+        <label>
+          <select onChange={(e) => editFilter("genres", e.target.value)}>
+            <option>Gênero:</option>
+            {genres.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
           </select>
         </label>
 
-        <label>
-          <span>Avaliação mínima:</span>
+        <YearRangePicker
+          onChangeStart={(value) => editFilter("year_start", value)}
+          onChangeEnd={(value) => editFilter("year_end", value)}
+        />
 
-          <input type="number" min={0} max={10} step={1} />
+        <label>
+          <input
+            placeholder="Avaliação mínima:"
+            type="number"
+            min={0}
+            max={10}
+            step={1}
+            onChange={(e) => editFilter("min_rating", e.target.value)}
+          />
         </label>
 
         <label>
-          <span>Qtd avaliações:</span>
-
-          <input type="number" />
+          <input
+            placeholder="Qtd avaliações:"
+            onChange={(e) => editFilter("min_votes", e.target.value)}
+            type="number"
+          />
         </label>
 
         <button type="submit" className={styles.main__form__submit}>
@@ -59,23 +116,41 @@ export function HomeSearch() {
         </button>
       </form>
 
-      <div className={styles.main__table}>
-        {posters.map((item) => (
-          <Link
-            key={item.imdbID}
-            href={`/film/${item.imdbID}`}
-            style={{ textDecoration: "none" }}
-          >
-            <div className={styles.main__table__card}>
-              <div className={styles["main__table__card__c-img"]}>
-                {item.Poster != "N/A" && (
-                  <Image src={item.Poster} alt={item.Title} fill />
+      {loading ? (
+        <div className={styles["c-loader"]}>
+          <div className={styles.loader} />
+        </div>
+      ) : (
+        <div className={styles.main__table}>
+          {movies.map((movie) => (
+            <Link
+              key={movie.movieid}
+              href={`/film/${movie.title}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className={styles.main__table__card}>
+                <strong>{movie.title}</strong>
+
+                <p>
+                  <b>Gênero:</b> {movie.genres.split("|").join(" | ")}
+                </p>
+
+                {movie.average_rating && (
+                  <div className={styles.main__table__card__row}>
+                    <Star sx={{ fontSize: 18 }} />
+                    <p>{movie.average_rating.toFixed(2)} / 10</p>
+                  </div>
                 )}
               </div>
-              <p>{item.Title}</p>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
+      )}
+
+      <div className={styles.pagination}>
+        <button onClick={getPrevData}>Voltar</button>
+        <span>{page}</span>
+        <button onClick={getNextData}>Próximo</button>
       </div>
     </main>
   );

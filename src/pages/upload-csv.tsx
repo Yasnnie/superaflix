@@ -1,4 +1,3 @@
-import { FileDropzone } from "@/components/FileDropzone";
 import { UploadData } from "@/components/UploadData";
 import Head from "next/head";
 

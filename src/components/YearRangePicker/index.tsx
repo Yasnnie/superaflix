@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import styles from "./YearRangePicker.module.scss";
 
-export function YearRangePicker() {
+interface Props {
+  onChangeStart: (value: string) => void;
+  onChangeEnd: (value: string) => void;
+}
+
+export function YearRangePicker({ onChangeStart, onChangeEnd }: Props) {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 101 }, (_, i) => currentYear - 100 + i);
 
@@ -9,25 +14,24 @@ export function YearRangePicker() {
   const [endYear, setEndYear] = useState(0);
 
   const handleStartYearChange = (e: any) => {
-    const newStartYear = parseInt(e.target.value);
-    if (newStartYear <= endYear) {
-      setStartYear(newStartYear);
-    }
+    const value = e.target.value;
+    const newStartYear = parseInt(value);
+    onChangeStart(value);
+    setStartYear(newStartYear);
   };
 
   const handleEndYearChange = (e: any) => {
-    const newEndYear = parseInt(e.target.value);
-    if (newEndYear >= startYear) {
-      setEndYear(newEndYear);
-    }
+    const value = e.target.value;
+    const newEndYear = parseInt(value);
+    onChangeEnd(value);
+    setEndYear(newEndYear);
   };
 
   return (
     <label>
-      Data:
       <div className={styles.row}>
         <select value={startYear} onChange={handleStartYearChange}>
-          <option value={0}></option>
+          <option value={0}>De:</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -38,7 +42,7 @@ export function YearRangePicker() {
         <span />
 
         <select value={endYear} onChange={handleEndYearChange}>
-          <option value={0}></option>
+          <option value={0}>Até:</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
