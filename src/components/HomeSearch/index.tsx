@@ -80,7 +80,7 @@ export function HomeSearch() {
 
         <label>
           <select onChange={(e) => editFilter("genres", e.target.value)}>
-            <option>Gênero:</option>
+            <option value={""}>Gênero:</option>
             {genres.map((item) => (
               <option key={item}>{item}</option>
             ))}

@@ -12,13 +12,6 @@ export function FileDropzone({ onFilesDropped }: Props) {
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      if (fileRejections.length > 0) {
-        setError(
-          "Alguns arquivos são muito grandes. O tamanho máximo é de 430 MB."
-        );
-      } else {
-        setError(null);
-      }
       onFilesDropped(acceptedFiles);
     },
     [onFilesDropped]
@@ -29,7 +22,6 @@ export function FileDropzone({ onFilesDropped }: Props) {
     accept: {
       "text/csv": [".csv"],
     },
-    maxSize: 430 * 1024 * 1024, // Limite de 430 MB em bytes
   });
 
   return (
