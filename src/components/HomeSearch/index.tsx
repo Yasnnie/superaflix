@@ -13,7 +13,7 @@ export function HomeSearch() {
   const [loading, setLoading] = useState(true);
 
   const [filters, setFilter] = useState<Filters>({
-    title: "",
+    search: "",
     min_votes: "",
     min_rating: "",
     genres: "",
@@ -73,8 +73,8 @@ export function HomeSearch() {
         <label>
           <input
             placeholder="Nome:"
-            value={filters.title}
-            onChange={(e) => editFilter("title", e.target.value)}
+            value={filters.search}
+            onChange={(e) => editFilter("search", e.target.value)}
           />
         </label>
 

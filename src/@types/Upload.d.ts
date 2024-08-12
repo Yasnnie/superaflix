@@ -23,7 +23,7 @@ interface Movie {
 }
 
 interface Filters {
-  title: string;
+  search: string;
   min_votes: string;
   min_rating: string;
   genres: string;
